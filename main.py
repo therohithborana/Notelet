@@ -3,8 +3,13 @@ from routes.note import note
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
-app = FastAPI()
+app = FastAPI(
+    title="NoteLet",
+    description="A modern note-taking application built with FastAPI",
+    version="1.0.0"
+)
 
 # CORS middleware configuration
 app.add_middleware(
@@ -19,11 +24,14 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# Include the note router at the root path
+# Include the note router
 app.include_router(note, prefix="")
 
 # Root redirect
 @app.get("/")
 async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "newDocs": []})
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
 
