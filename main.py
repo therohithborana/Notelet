@@ -4,7 +4,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-import typer
 
 app = FastAPI(
     title="NoteLet",
@@ -33,10 +32,6 @@ app.include_router(note, prefix="")
 async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "newDocs": []})
 
-def start():
-    """Run the application with uvicorn server"""
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
-
 if __name__ == "__main__":
-    typer.run(start)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
